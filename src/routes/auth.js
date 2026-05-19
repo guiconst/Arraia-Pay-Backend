@@ -16,9 +16,9 @@ router.post(
     body('name').trim().notEmpty().withMessage('Nome é obrigatório.')
       .isLength({ max: 120 }).withMessage('Nome muito longo.'),
     body('email').isEmail().normalizeEmail().withMessage('E-mail inválido.'),
-    body('password').isLength({ min: 8 }).withMessage('Senha deve ter pelo menos 8 caracteres.'),
-    body('birth_date').notEmpty().withMessage('Data de nascimento obrigatória.')
-      .isDate({ format: 'YYYY-MM-DD' }).withMessage('Data inválida. Use o formato YYYY-MM-DD.'),
+    body('password').isLength({ min: 6 }).withMessage('Senha deve ter pelo menos 6 caracteres.'),
+    body('birth_date').optional()
+      .isDate({ format: 'YYYY-MM-DD' }).withMessage('Data inválida.'),
   ],
   validate,
   async (req, res, next) => {
@@ -29,8 +29,8 @@ router.post(
       const { data, error } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
-        email_confirm: false, // exige confirmação por e-mail
-        user_metadata: { full_name: name, birth_date },
+        email_confirm: false,
+        user_metadata: { full_name: name, birth_date: birth_date || null },
       });
 
       if (error) {
