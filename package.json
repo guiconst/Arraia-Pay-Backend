@@ -1,8 +1,6 @@
 {
   "name": "arraia-pay-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "description": "Backend da Arraia Pay — API REST com Node.js, Express e Supabase",
   "main": "src/server.js",
   "scripts": {

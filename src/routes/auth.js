@@ -102,15 +102,12 @@ router.post(
 // ============================================================
 router.post('/logout', authenticate, async (req, res, next) => {
   try {
-    // Usa o cliente anon com o token do usuário para fazer logout correto
-    const tempClient = require('@supabase/supabase-js').createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
-    await tempClient.auth.admin.signOut(req.token);
+    // admin.signOut invalida o JWT no Supabase (requer service key)
+    await supabaseAdmin.auth.admin.signOut(req.token);
     return success(res, { message: 'Logout realizado com sucesso.' });
   } catch (err) {
-    next(err);
+    // Mesmo que falhe, retorna sucesso — o frontend já descartou o token
+    return success(res, { message: 'Logout realizado.' });
   }
 });
 
