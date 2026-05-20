@@ -86,6 +86,18 @@ app.get('/health', (req, res) => {
 });
 
 // ============================================================
+// ROTA RAIZ
+// ============================================================
+app.get('/', (req, res) => {
+  res.json({
+    ok:      true,
+    service: 'Arraia Pay API',
+    version: '1.0.0',
+    docs:    '/health',
+  });
+});
+
+// ============================================================
 // ROTAS DA API
 // ============================================================
 app.use('/api/auth',         authLimiter, authRoutes);
@@ -101,10 +113,13 @@ app.use(notFound);
 app.use(errorHandler);
 
 // ============================================================
-// START
+// START — só sobe servidor local fora da Vercel
 // ============================================================
-app.listen(PORT, () => {
-  console.log(`
+module.exports = app;
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`
   🌽 =====================================
   🎪  Arraia Pay API rodando!
   🌽 =====================================
@@ -112,7 +127,6 @@ app.listen(PORT, () => {
   ➜  Health:  http://localhost:${PORT}/health
   ➜  Env:     ${process.env.NODE_ENV || 'development'}
   =====================================
-  `);
-});
-
-module.exports = app;
+    `);
+  });
+}
